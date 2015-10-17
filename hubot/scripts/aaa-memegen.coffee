@@ -104,5 +104,5 @@ memeResponder = (robot, meme) ->
     top = msg.match[meme.top].replace(/\ /g, '_').replace(/\?/g, '%3F')
     bottom = msg.match[meme.bottom].replace(/\ /g, '_').replace(/\?/g, '%3F')
 
-    msg.send "http://mydrive-memes.herokuapp.com/#{top}/#{bottom}/#{meme.image}.jpg"
+    msg.send "https://memes.mydrivesystems.net/#{top}/#{bottom}/#{meme.image}.jpg"
     msg.finish()
