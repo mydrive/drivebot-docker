@@ -18,9 +18,9 @@
 #
 
 yaks = [
-  "https://github.com/gavinheavyside/drivebot/raw/master/images/yak.jpg",
-  "https://github.com/gavinheavyside/drivebot/raw/master/images/yak2.jpg",
-  "https://github.com/gavinheavyside/drivebot/raw/master/images/yak3.jpg"
+  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/yak.jpg",
+  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/yak2.jpg",
+  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/yak3.jpg"
 ]
 
 module.exports = (robot) ->
