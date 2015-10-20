@@ -5,5 +5,6 @@
   "hubot-maps",
   "hubot-redis-brain",
   "hubot-shipit",
-  "hubot-standup-alarm"
+  "hubot-standup-alarm",
+  "hubot-google-images"
 ]
