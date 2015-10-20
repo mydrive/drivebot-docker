@@ -27,6 +27,7 @@ RUN yo hubot --owner="MyDrive Systems <systems@mydrivesolutions.com>" --name="Dr
 RUN npm install hubot-slack --save && npm install
 RUN npm install hubot-pugme --save && npm install
 RUN npm install hubot-standup-alarm --save && npm install
+RUN npm install hubot-google-images --save && npm install
 # RUN npm install hubot-auth --save && npm install
 # RUN npm install hubot-google-translate --save && npm install
 # RUN npm install hubot-auth --save && npm install
