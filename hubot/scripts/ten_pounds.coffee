@@ -18,9 +18,7 @@
 #
 
 ten_pounds = [
-  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/ten_pounds.jpg",
-  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/ten_pounds2.jpg",
-  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/ten_pounds3.jpg"
+  "https://s3-eu-west-1.amazonaws.com/mydrive-public/images/ten_pounds.jpg"
 ]
 
 module.exports = (robot) ->
