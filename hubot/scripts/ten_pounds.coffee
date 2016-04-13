@@ -22,5 +22,5 @@ ten_pounds = [
 ]
 
 module.exports = (robot) ->
-  robot.hear /(£10[^\d]|ten pounds)/i, (msg) ->
+  robot.hear /(£10\b|ten pounds)/i, (msg) ->
     msg.send msg.random ten_pounds
