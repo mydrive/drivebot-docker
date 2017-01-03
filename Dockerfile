@@ -1,8 +1,8 @@
-FROM ubuntu:trusty-20160405
+FROM ubuntu:yakkety-20161213
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-  expect redis-server nodejs npm python-pip && \
+  expect redis-server npm nodejs python-pip && \
   pip install awscli
 
 RUN apt-get clean && \
