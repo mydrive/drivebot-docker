@@ -13,6 +13,8 @@ docker run --rm -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
                 --name drivebot mydrive/drivebot:1.3
 ```
 
+*The above script assumes that AWS MFA credentials are in your ENV and are not older than one hour, so have not expired.*
+
 When you're happy, push to the registry
 
 ```
