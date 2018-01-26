@@ -1,4 +1,4 @@
-FROM ubuntu:yakkety-20161213
+FROM ubuntu:16.04
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -28,6 +28,7 @@ RUN npm install hubot-slack --save && npm install
 RUN npm install hubot-pugme --save && npm install
 RUN npm install hubot-standup-alarm --save && npm install
 RUN npm install hubot-google-images --save && npm install
+RUN npm install hubot-redis-brain --save && npm install
 # RUN npm install hubot-auth --save && npm install
 # RUN npm install hubot-google-translate --save && npm install
 # RUN npm install hubot-auth --save && npm install
