@@ -57,8 +57,8 @@ badger_steal = (robot, msg) ->
     robot.brain.set "badger_owner", message_sender
 
     now = new Date()
-    timestamp = now.toISOString()
-    robot.brain.set "badger_time", timestamp
+    date_time = now.toUTCString()
+    robot.brain.set "badger_time", date_time
 
     msg.send ":badger: was stolen from #{current_owner} by #{message_sender}"
 
@@ -72,8 +72,8 @@ badger_take = (robot, msg) ->
     robot.brain.set "badger_owner", message_sender
 
     now = new Date()
-    timestamp = now.toISOString()
-    robot.brain.set "badger_time", timestamp
+    date_time = now.toUTCString()
+    robot.brain.set "badger_time", date_time
 
     msg.send ":badger: moved from the wild to the care of #{message_sender}"
   else if current_owner == message_sender
