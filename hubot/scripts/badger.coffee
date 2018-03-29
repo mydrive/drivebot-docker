@@ -94,6 +94,7 @@ module.exports = (robot) ->
   robot.hear /badger[ ]?take/i, (msg) -> badger_take(robot, msg)
 
   robot.hear /badger[ ]?free/i, (msg) -> badger_free(robot, msg)
+  robot.hear /badger[ ]?release/i, (msg) -> badger_free(robot, msg)
 
   robot.hear /badger[ ]?where/i, (msg) -> badger_where(robot, msg)
 
