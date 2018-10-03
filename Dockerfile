@@ -11,7 +11,7 @@ RUN apt-get clean && \
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN npm install -g coffee-script
-RUN npm install -g yo generator-hubot
+RUN npm install -g yo@1.8.5 generator-hubot
 
 # Create hubot user
 RUN useradd -d /hubot -m -s /bin/bash -U hubot
