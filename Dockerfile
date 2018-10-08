@@ -29,6 +29,7 @@ RUN npm install hubot-pugme --save && npm install
 RUN npm install hubot-standup-alarm --save && npm install
 RUN npm install hubot-google-images --save && npm install
 RUN npm install hubot-redis-brain --save && npm install
+RUN npm install signalfx --save && npm install
 # RUN npm install hubot-auth --save && npm install
 # RUN npm install hubot-google-translate --save && npm install
 # RUN npm install hubot-auth --save && npm install
