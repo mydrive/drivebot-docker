@@ -32,8 +32,17 @@ signalfx_client = new signalfx.Ingest(process.env.SIGNALFX_API_TOKEN)
 SIGNALFX_SUCCESSFUL = "successful"
 SIGNALFX_FAILED = "failed"
 
-send_signalfx_metric = (metric_name, dimensions) ->
+send_signalfx_metric = (command, message_sender, attempt_result) ->
+  metric_name = "badger.command"
+
+  dimensions = {
+    command: command,
+    message_sender: message_sender,
+    attempt_result: attempt_result
+  }
+
   timestamp = new Date().getTime()
+
   metric = {
     metric: metric_name,
     value: 1,
@@ -48,23 +57,23 @@ badger_free = (robot, msg) ->
 
   message_sender = msg.message.user.name.toLowerCase()
 
-  signalfx_metric_name = "badger.free"
-  signalfx_metric_dimensions = { message_sender: message_sender }
+  signalfx_command = "free"
+  signalfx_metric_attempt_result = null
 
   if current_owner == ""
-    signalfx_metric_dimensions.result = SIGNALFX_FAILED
+    signalfx_metric_attempt_result = SIGNALFX_FAILED
     msg.send ":badger: is already in the wild"
   else if current_owner == message_sender
     robot.brain.set "badger_owner", ""
     robot.brain.set "badger_time", ""
 
-    signalfx_metric_dimensions.result = SIGNALFX_SUCCESSFUL
+    signalfx_metric_attempt_result = SIGNALFX_SUCCESSFUL
     msg.send ":badger: was released into the wild by #{current_owner}"
   else
-    signalfx_metric_dimensions.result = SIGNALFX_FAILED
+    signalfx_metric_attempt_result = SIGNALFX_FAILED
     msg.send ":badger: is currently in the care of #{current_owner}, please wait for them to free the badger"
 
-  send_signalfx_metric(signalfx_metric_name, signalfx_metric_dimensions)
+  send_signalfx_metric(signalfx_command, message_sender, signalfx_metric_attempt_result)
 
 badger_steal = (robot, msg) ->
   current_owner = robot.brain.get "badger_owner" || ""
@@ -72,15 +81,15 @@ badger_steal = (robot, msg) ->
 
   message_sender = msg.message.user.name.toLowerCase()
 
-  signalfx_metric_name = "badger.steal"
-  signalfx_metric_dimensions = { message_sender: message_sender }
+  signalfx_command = "steal"
+  signalfx_metric_attempt_result = null
 
   if current_owner == ""
     robot.brain.set "badger_owner", message_sender
-    signalfx_metric_dimensions.result = SIGNALFX_SUCCESSFUL
+    signalfx_metric_attempt_result = SIGNALFX_SUCCESSFUL
     msg.send ":badger: moved from the wild to the care of #{message_sender}"
   else if current_owner == message_sender
-    signalfx_metric_dimensions.result = SIGNALFX_FAILED
+    signalfx_metric_attempt_result = SIGNALFX_FAILED
     msg.send ":badger: is already in the care of #{current_owner}"
   else
     robot.brain.set "badger_owner", message_sender
@@ -89,10 +98,10 @@ badger_steal = (robot, msg) ->
     date_time = now.toUTCString()
     robot.brain.set "badger_time", date_time
 
-    signalfx_metric_dimensions.result = SIGNALFX_SUCCESSFUL
+    signalfx_metric_attempt_result = SIGNALFX_SUCCESSFUL
     msg.send ":badger: was stolen from #{current_owner} by #{message_sender}"
 
-  send_signalfx_metric(signalfx_metric_name, signalfx_metric_dimensions)
+  send_signalfx_metric(signalfx_command, message_sender, signalfx_metric_attempt_result)
 
 badger_take = (robot, msg) ->
   current_owner = robot.brain.get "badger_owner" || ""
@@ -100,8 +109,8 @@ badger_take = (robot, msg) ->
 
   message_sender = msg.message.user.name.toLowerCase()
 
-  signalfx_metric_name = "badger.take"
-  signalfx_metric_dimensions = { message_sender: message_sender }
+  signalfx_command = "take"
+  signalfx_metric_attempt_result = null
 
   if current_owner == ""
     robot.brain.set "badger_owner", message_sender
@@ -110,16 +119,16 @@ badger_take = (robot, msg) ->
     date_time = now.toUTCString()
     robot.brain.set "badger_time", date_time
 
-    signalfx_metric_dimensions.result = SIGNALFX_SUCCESSFUL
+    signalfx_metric_attempt_result = SIGNALFX_SUCCESSFUL
     msg.send ":badger: moved from the wild to the care of #{message_sender}"
   else if current_owner == message_sender
-    signalfx_metric_dimensions.result = SIGNALFX_FAILED
+    signalfx_metric_attempt_result = SIGNALFX_FAILED
     msg.send ":badger: is already in the care of #{current_owner} since #{badger_time}"
   else
-    signalfx_metric_dimensions.result = SIGNALFX_FAILED
+    signalfx_metric_attempt_result = SIGNALFX_FAILED
     msg.send "#{current_owner} has had :badger: since #{badger_time}, go badger them"
 
-  send_signalfx_metric(signalfx_metric_name, signalfx_metric_dimensions)
+  send_signalfx_metric(signalfx_command, message_sender, signalfx_metric_attempt_result)
 
 badger_where = (robot, msg) ->
   current_owner = robot.brain.get "badger_owner" || ""
@@ -127,15 +136,15 @@ badger_where = (robot, msg) ->
 
   message_sender = msg.message.user.name.toLowerCase()
 
-  signalfx_metric_name = "badger.where"
-  signalfx_metric_dimensions = { message_sender: message_sender, result: SIGNALFX_SUCCESSFUL }
+  signalfx_command = "where"
+  signalfx_metric_attempt_result = SIGNALFX_SUCCESSFUL
 
   if current_owner == ""
     msg.send ":badger: is currently in the wild"
   else
     msg.send ":badger: is currently in the care of #{current_owner} since #{badger_time}"
 
-  send_signalfx_metric(signalfx_metric_name, signalfx_metric_dimensions)
+  send_signalfx_metric(signalfx_command, message_sender, signalfx_metric_attempt_result)
 
 module.exports = (robot) ->
   robot.hear /badger[ ]?take/i, (msg) -> badger_take(robot, msg)
