@@ -1,13 +1,18 @@
+# MyDrive's Hubot
 
-# Building and running locally
+## Building and running locally
 
-## Prerequisites
+### Prerequisites
 
-When running locally, i.e. not on an EC2 instance, the container requires you pass in AWS MFA credentials. The method described here requires the credentials to in be your ENV and not to be older than one hour, otherwise they would have expired. The credentials are only required on starting the container.
+When running locally, i.e. not on an EC2 instance, the container requires you
+pass in AWS MFA credentials. The method described here requires the credentials
+to be in your ENV and not to be older than one hour, otherwise they would have
+expired. The credentials are only required on starting the container.
 
-One method to get the credentials into your ENV is to use the MyDrive AWS MFA script: https://github.com/mydrive/mydrive-aws-mfa#quiet
+One method to get the credentials into your ENV is to use the MyDrive AWS MFA
+script: https://github.com/mydrive/mydrive-aws-mfa#quiet
 
-## Steps
+### Steps
 
 1) Build the docker image and tag it, bumping the version tag:
 
@@ -33,7 +38,7 @@ docker run --rm -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
 docker push mydrive/drivebot:1.3
 ```
 
-# Deploying
+## Deploying
 
 Edit the tag in the terraform file, to upgrade the version in the ECS task
-definition
+definition.
