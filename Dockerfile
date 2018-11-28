@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -8,10 +8,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /usr/bin/nodejs /usr/bin/node
-
-RUN npm install -g coffee-script
-RUN npm install -g yo@1.8.5 generator-hubot
+RUN npm install -g coffeescript
+RUN npm install -g yo generator-hubot
 
 # Create hubot user
 RUN useradd -d /hubot -m -s /bin/bash -U hubot
@@ -20,27 +18,18 @@ RUN useradd -d /hubot -m -s /bin/bash -U hubot
 USER  hubot
 WORKDIR /hubot
 
-# Install hubot
+# Install Hubot
 RUN yo hubot --owner="MyDrive Systems <systems@mydrivesolutions.com>" --name="DriveBot" --description="Your plastic pal who's fun to be with" --defaults
 
 # Some adapters / scripts
-RUN npm install hubot-slack --save && npm install
-RUN npm install hubot-pugme --save && npm install
-RUN npm install hubot-standup-alarm --save && npm install
-RUN npm install hubot-google-images --save && npm install
-RUN npm install hubot-redis-brain --save && npm install
-RUN npm install signalfx --save && npm install
-# RUN npm install hubot-auth --save && npm install
-# RUN npm install hubot-google-translate --save && npm install
-# RUN npm install hubot-auth --save && npm install
-# RUN npm install hubot-github --save && npm install
-# RUN npm install hubot-alias --save && npm install
-# RUN npm install hubot-gocd --save && npm install
-# RUN npm install hubot-youtube --save && npm install
-# RUN npm install hubot-s3-brain --save && npm install
+RUN npm install hubot-slack --save
+RUN npm install hubot-pugme --save
+RUN npm install hubot-standup-alarm --save
+RUN npm install hubot-google-images --save
+RUN npm install hubot-redis-brain --save
+RUN npm install signalfx --save
 
 # Activate some built-in scripts
-ADD hubot/hubot-scripts.json /hubot/
 ADD hubot/external-scripts.json /hubot/
 
 # Add some custom scripts
