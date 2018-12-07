@@ -22,12 +22,13 @@ WORKDIR /hubot
 RUN yo hubot --owner="MyDrive Systems <systems@mydrivesolutions.com>" --name="DriveBot" --description="Your plastic pal who's fun to be with" --defaults
 
 # Some adapters / scripts
-RUN npm install hubot-slack --save
-RUN npm install hubot-pugme --save
-RUN npm install hubot-standup-alarm --save
-RUN npm install hubot-google-images --save
-RUN npm install hubot-redis-brain --save
-RUN npm install signalfx --save
+RUN npm install \
+  hubot-slack  \
+  hubot-pugme \
+  hubot-standup-alarm \
+  hubot-google-images \
+  hubot-redis-brain \
+  signalfx --save
 
 # Activate some built-in scripts
 ADD hubot/external-scripts.json /hubot/
