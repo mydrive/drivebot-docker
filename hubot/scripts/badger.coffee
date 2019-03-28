@@ -60,9 +60,10 @@ class Badger
       signalfx_metric_attempt_result = @signalfx.FAILED
       msg.send ":badger: is already in the care of #{@badger_owner()}"
     else
+      @old_badger_owner = @badger_owner()
       @save_badger_info(message_sender(msg), @date_time())
       signalfx_metric_attempt_result = @signalfx.SUCCESSFUL
-      msg.send ":badger: was stolen from #{@badger_owner()} by #{message_sender(msg)}"
+      msg.send ":badger: was stolen from #{@old_badger_owner()} by #{message_sender(msg)}"
 
     @signalfx.send_metric("steal", message_sender(msg), signalfx_metric_attempt_result)
 
