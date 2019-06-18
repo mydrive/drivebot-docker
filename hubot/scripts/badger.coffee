@@ -35,13 +35,15 @@ class Badger
     @save_badger_info = (badger_owner, badger_time) ->
       @robot.brain.set "badger_owner", badger_owner
       @robot.brain.set "badger_time", badger_time
-
+    @time_in_users_possession_ms = ->
+      Date.now() - Date.parse(@badger_time())
 
   free: (msg) ->
     if @badger_is_free()
       signalfx_metric_attempt_result = @signalfx.FAILED
       msg.send ":badger: is already in the wild"
     else if @badger_owner_is_sender(msg)
+      @signalfx.send_time_in_users_possession(@badger_owner(), @time_in_users_possession_ms())
       @save_badger_info("", "")
       signalfx_metric_attempt_result = @signalfx.SUCCESSFUL
       msg.send ":badger: was released into the wild by #{message_sender(msg)}"
@@ -49,7 +51,7 @@ class Badger
       signalfx_metric_attempt_result = @signalfx.FAILED
       msg.send ":badger: is currently in the care of #{@badger_owner()}, please wait for them to free the badger"
 
-    @signalfx.send_metric("free", message_sender(msg), signalfx_metric_attempt_result)
+    @signalfx.send_command("free", message_sender(msg), signalfx_metric_attempt_result)
 
   steal: (msg) ->
     if @badger_is_free()
@@ -61,11 +63,12 @@ class Badger
       msg.send ":badger: is already in the care of #{@badger_owner()}"
     else
       @old_badger_owner = @badger_owner()
+      @signalfx.send_time_in_users_possession(@badger_owner(), @time_in_users_possession_ms())
       @save_badger_info(message_sender(msg), @date_time())
       signalfx_metric_attempt_result = @signalfx.SUCCESSFUL
       msg.send ":badger: was stolen from #{@old_badger_owner} by #{message_sender(msg)}"
 
-    @signalfx.send_metric("steal", message_sender(msg), signalfx_metric_attempt_result)
+    @signalfx.send_command("steal", message_sender(msg), signalfx_metric_attempt_result)
 
   take: (msg) ->
     if @badger_is_free()
@@ -79,7 +82,7 @@ class Badger
       signalfx_metric_attempt_result = @signalfx.FAILED
       msg.send "#{@badger_owner()} has had :badger: since #{@badger_time()}, go badger them"
 
-    @signalfx.send_metric("take", message_sender(msg), signalfx_metric_attempt_result)
+    @signalfx.send_command("take", message_sender(msg), signalfx_metric_attempt_result)
 
   where: (msg) ->
     if @badger_is_free()
@@ -87,7 +90,7 @@ class Badger
     else
       msg.send ":badger: is currently in the care of #{@badger_owner()} since #{@badger_time()}"
 
-    @signalfx.send_metric("where", message_sender(msg), @signalfx.SUCCESSFUL)
+    @signalfx.send_command("where", message_sender(msg), @signalfx.SUCCESSFUL)
 
   message_sender = (msg) ->
     msg.message.user.name.toLowerCase()
@@ -101,7 +104,26 @@ class SignalFX
     signalfx = require("signalfx")
     @signalfx_client = new signalfx.Ingest(process.env.SIGNALFX_API_TOKEN)
 
-  send_metric: (command, message_sender, attempt_result) ->
+  send_time_in_users_possession: (user, value) ->
+    metric_name = "badger.time_in_users_possession_ms"
+
+    dimensions = {
+      user: user
+    }
+
+    timestamp = new Date().getTime()
+
+    metric = {
+      metric: metric_name,
+      value: value,
+      timestamp: timestamp,
+      dimensions: dimensions
+    }
+
+    @signalfx_client.send({ gauges:[metric] })
+
+
+  send_command: (command, message_sender, attempt_result) ->
     metric_name = "badger.command"
 
     dimensions = {
